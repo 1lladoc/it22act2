@@ -1,4 +1,5 @@
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /*
@@ -22,6 +23,7 @@ public class registration extends javax.swing.JFrame {
     }
     
     registration_class reg = new registration_class();
+    login_class logobj = new login_class();
     
     public void clear_reg_txtfld(){
         fntf.setText(null);
@@ -54,10 +56,13 @@ public class registration extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        luntf = new javax.swing.JTextField();
+        lpwpf = new javax.swing.JPasswordField();
+        jLabel8 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
-        registration_frame.setMaximumSize(new java.awt.Dimension(400, 400));
         registration_frame.setMinimumSize(new java.awt.Dimension(400, 400));
-        registration_frame.setPreferredSize(new java.awt.Dimension(400, 400));
 
         cppf.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -148,19 +153,55 @@ public class registration extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setText("Username:");
+
+        jLabel8.setText("Password:");
+
+        jButton3.setText("Login");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(317, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lpwpf)
+                            .addComponent(luntf, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(113, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addGap(165, 165, 165))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(266, Short.MAX_VALUE)
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(luntf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lpwpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -183,18 +224,23 @@ public class registration extends javax.swing.JFrame {
         String cpw = new String(cppf.getPassword());
         
         int y = reg.confirmPassword(pw, cpw);
+        int z = reg.checkUsername(un);
         
         //System.out.println(fn);//+"\n"+ln+"\n"+un+"\n"+pw
         
         if(!"".equals(fn) && !"".equals(ln) && !"".equals(un) && !"".equals(pw) && !"".equals(cpw)){
             if(y==1){
-                    int x = reg.register(un, pw, fn, ln);
-                    if(x==1){
-                    JOptionPane.showMessageDialog(registration_frame, "Successfully Registered!");
-                    this.clear_reg_txtfld();
-                    registration_frame.setVisible(false);
-                    registration_frame.setAlwaysOnTop(false);
-                }
+                    if(z==0){
+                        int x = reg.register(un, pw, fn, ln);
+                        if(x==1){
+                            JOptionPane.showMessageDialog(registration_frame, "Successfully Registered!");
+                            this.clear_reg_txtfld();
+                            registration_frame.setVisible(false);
+                            registration_frame.setAlwaysOnTop(false);
+                        }
+                }else{
+                        JOptionPane.showMessageDialog(registration_frame, "Username Already Exist!", "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
             }else{
                 JOptionPane.showMessageDialog(registration_frame, "Password Does Not Match!", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -209,7 +255,7 @@ public class registration extends javax.swing.JFrame {
         // TODO add your handling code here:
         String pw = new String(pwpf.getPassword());
         String cpw = new String(cppf.getPassword());
-        String msg = "";
+        String msg;
         
         int x = reg.confirmPassword(pw, cpw);
         if(x==1){
@@ -220,6 +266,22 @@ public class registration extends javax.swing.JFrame {
         jLabel6.setText(msg);
         
     }//GEN-LAST:event_cppfKeyReleased
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        String un = luntf.getText();
+        String pw = new String(lpwpf.getPassword());
+        
+        int x = logobj.login(un, pw);
+        if(x==1){
+            //System.out.println("Login Success");
+            this.setVisible(false);
+            JFrame mainpage = new mainpage();
+            mainpage.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,13 +323,18 @@ public class registration extends javax.swing.JFrame {
     private javax.swing.JTextField fntf;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField lntf;
+    private javax.swing.JPasswordField lpwpf;
+    private javax.swing.JTextField luntf;
     private javax.swing.JPasswordField pwpf;
     private javax.swing.JFrame registration_frame;
     private javax.swing.JTextField untf;
