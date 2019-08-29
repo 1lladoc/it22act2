@@ -1,3 +1,6 @@
+
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -16,6 +19,16 @@ public class registration extends javax.swing.JFrame {
     public registration() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+    
+    registration_class reg = new registration_class();
+    
+    public void clear_reg_txtfld(){
+        fntf.setText(null);
+        lntf.setText(null);
+        untf.setText(null);
+        pwpf.setText(null);
+        cppf.setText(null);
     }
 
     /**
@@ -39,11 +52,18 @@ public class registration extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
         registration_frame.setMaximumSize(new java.awt.Dimension(400, 400));
         registration_frame.setMinimumSize(new java.awt.Dimension(400, 400));
         registration_frame.setPreferredSize(new java.awt.Dimension(400, 400));
+
+        cppf.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cppfKeyReleased(evt);
+            }
+        });
 
         jLabel1.setText("Last Name:");
 
@@ -66,6 +86,10 @@ public class registration extends javax.swing.JFrame {
         registration_frame.getContentPane().setLayout(registration_frameLayout);
         registration_frameLayout.setHorizontalGroup(
             registration_frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registration_frameLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(registration_frameLayout.createSequentialGroup()
                 .addGap(57, 57, 57)
                 .addGroup(registration_frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -76,16 +100,14 @@ public class registration extends javax.swing.JFrame {
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(registration_frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cppf)
-                    .addComponent(pwpf)
-                    .addComponent(untf)
-                    .addComponent(lntf)
-                    .addComponent(fntf, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(104, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registration_frameLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                    .addGroup(registration_frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(cppf)
+                        .addComponent(pwpf)
+                        .addComponent(untf)
+                        .addComponent(lntf)
+                        .addComponent(fntf, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         registration_frameLayout.setVerticalGroup(
             registration_frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +132,9 @@ public class registration extends javax.swing.JFrame {
                 .addGroup(registration_frameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cppf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addContainerGap())
         );
@@ -129,16 +153,16 @@ public class registration extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(160, 160, 160)
+                .addContainerGap()
                 .addComponent(jButton1)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addContainerGap(317, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(233, Short.MAX_VALUE)
+                .addContainerGap(266, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(44, 44, 44))
+                .addContainerGap())
         );
 
         pack();
@@ -147,6 +171,7 @@ public class registration extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         registration_frame.setVisible(true);
+        registration_frame.setAlwaysOnTop(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -155,10 +180,46 @@ public class registration extends javax.swing.JFrame {
         String ln = lntf.getText();
         String un = untf.getText();
         String pw = new String(pwpf.getPassword());
+        String cpw = new String(cppf.getPassword());
         
-        registration_class reg = new registration_class();
-        reg.register(un, pw, fn, ln);
+        int y = reg.confirmPassword(pw, cpw);
+        
+        //System.out.println(fn);//+"\n"+ln+"\n"+un+"\n"+pw
+        
+        if(!"".equals(fn) && !"".equals(ln) && !"".equals(un) && !"".equals(pw) && !"".equals(cpw)){
+            if(y==1){
+                    int x = reg.register(un, pw, fn, ln);
+                    if(x==1){
+                    JOptionPane.showMessageDialog(registration_frame, "Successfully Registered!");
+                    this.clear_reg_txtfld();
+                    registration_frame.setVisible(false);
+                    registration_frame.setAlwaysOnTop(false);
+                }
+            }else{
+                JOptionPane.showMessageDialog(registration_frame, "Password Does Not Match!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }else{
+            JOptionPane.showMessageDialog(registration_frame, "Please Fill out the fields!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void cppfKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cppfKeyReleased
+        // TODO add your handling code here:
+        String pw = new String(pwpf.getPassword());
+        String cpw = new String(cppf.getPassword());
+        String msg = "";
+        
+        int x = reg.confirmPassword(pw, cpw);
+        if(x==1){
+            msg = "Password Matched!";
+        }else{
+            msg = "Password Does Not Match!";
+        }
+        jLabel6.setText(msg);
+        
+    }//GEN-LAST:event_cppfKeyReleased
 
     /**
      * @param args the command line arguments
@@ -205,6 +266,7 @@ public class registration extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField lntf;
     private javax.swing.JPasswordField pwpf;
     private javax.swing.JFrame registration_frame;

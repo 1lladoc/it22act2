@@ -18,9 +18,10 @@ import java.util.logging.Logger;
  */
 public class registration_class {
     
-    public void register(String username, String password, String firstname, String lastname){
+    public int register(String username, String password, String firstname, String lastname){
     //String sql = "insert into users values(null,'"+username+"',md5('"+password+"'),'"+lastname+"','"+firstname+"',0)";    
     //System.out.println(sql);
+    int x = 0;
     conn con = new conn();
     try{
         Class.forName("com.mysql.jdbc.Driver");
@@ -33,13 +34,26 @@ public class registration_class {
         pstmt.setString(3, lastname);
         pstmt.setString(4, firstname);
         
-        int x = pstmt.executeUpdate();
-        System.out.println(x);
+        x = pstmt.executeUpdate();
+        
+        //System.out.println(x);
     }   catch (ClassNotFoundException ex) {
             Logger.getLogger(registration_class.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(registration_class.class.getName()).log(Level.SEVERE, null, ex);
         }
+    return x;
+    }
+    
+    public int confirmPassword(String password, String confirmpassword){
+        int x = 0;
+        
+        if(password.equals(confirmpassword)){
+            x = 1;
+        }else{
+            x = 0;
+        }
+        return x;
     }
     
 }
