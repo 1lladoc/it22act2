@@ -276,7 +276,7 @@ public class registration extends javax.swing.JFrame {
         if(x==1){
             //System.out.println("Login Success");
             this.setVisible(false);
-            JFrame mainpage = new mainpage();
+            JFrame mainpage = new mainpage(logobj.fname);
             mainpage.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);

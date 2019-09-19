@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 public class login_class {
     conn con = new conn();
     
+    String fname = "";
+    
     public int login(String username, String password){
         int x = 0;
         
@@ -38,6 +40,7 @@ public class login_class {
             
             if(rs.next()){
                 x = 1;
+                fname = rs.getString("firstname");
             }else{
                 x = 0;
             }
