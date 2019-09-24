@@ -1,9 +1,17 @@
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.text.NumberFormatter;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,22 +29,47 @@ public class mainpage extends javax.swing.JFrame {
      * Creates new form mainpage
      */
     public mainpage() {
-        initComponents();      
+        initComponents();  
+        refresh();
     }
     
     public mainpage(String fname) {
         initComponents();
         jLabel1.setText("Welcome "+fname);
         this.setLocationRelativeTo(null);
+        refresh();
     }
 
     product pobj = new product();
+    conn con = new conn();
     
     void clearAddProductFields(){
         pntf.setText(null);
         pqty.setValue(0);
         ppr.setText(null);
         pntf.requestFocus();
+    }
+    
+    final void refresh(){
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = (Connection) DriverManager.getConnection(con.url,con.username,con.password);
+            
+            String sql = "select * from products;";
+            Statement stmt = (Statement) conn.createStatement();
+            
+            ResultSet rs = stmt.executeQuery(sql);
+            DefaultTableModel model = (DefaultTableModel) ptable.getModel();
+            model.setRowCount(0);
+            while(rs.next()){
+                model.addRow(new Object[]{rs.getString("id"),rs.getString("product_name"),rs.getString("quantity"),rs.getString("price")});
+            }
+              
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -58,8 +91,10 @@ public class mainpage extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        ptable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+
+        addproductframe.setMinimumSize(new java.awt.Dimension(400, 300));
 
         jLabel2.setText("Product Name:");
 
@@ -133,15 +168,24 @@ public class mainpage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        ptable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
                 "id", "product", "qty", "price"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        ptable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(ptable);
 
         jButton1.setText("Add Product");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -185,8 +229,8 @@ public class mainpage extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here
-        this.setVisible(false);
         addproductframe.setVisible(true);
+        addproductframe.setAlwaysOnTop(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void pprFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pprFocusLost
@@ -204,6 +248,7 @@ public class mainpage extends javax.swing.JFrame {
         if(r==1){
             JOptionPane.showMessageDialog(addproductframe, "New Product Successfully");
             clearAddProductFields();
+            refresh();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -251,9 +296,9 @@ public class mainpage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField pntf;
     private javax.swing.JFormattedTextField ppr;
     private javax.swing.JSpinner pqty;
+    private javax.swing.JTable ptable;
     // End of variables declaration//GEN-END:variables
 }
