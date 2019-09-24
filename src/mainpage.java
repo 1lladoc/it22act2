@@ -2,6 +2,7 @@
 import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import javax.swing.text.NumberFormatter;
 
 /*
@@ -30,6 +31,13 @@ public class mainpage extends javax.swing.JFrame {
     }
 
     product pobj = new product();
+    
+    void clearAddProductFields(){
+        pntf.setText(null);
+        pqty.setValue(0);
+        ppr.setText(null);
+        pntf.requestFocus();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -192,7 +200,11 @@ public class mainpage extends javax.swing.JFrame {
         int qty = (int) pqty.getValue();
         Object pr = ppr.getValue();
         
-        pobj.addProduct(pn, qty, pr);
+        int r = pobj.addProduct(pn, qty, pr);
+        if(r==1){
+            JOptionPane.showMessageDialog(addproductframe, "New Product Successfully");
+            clearAddProductFields();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
