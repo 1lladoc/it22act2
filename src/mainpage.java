@@ -40,7 +40,7 @@ public class mainpage extends javax.swing.JFrame {
         refresh();
     }
 
-    product pobj = new product();
+    product product_obj = new product();
     conn con = new conn();
     
     void clearAddProductFields(){
@@ -93,6 +93,7 @@ public class mainpage extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         ptable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         addproductframe.setMinimumSize(new java.awt.Dimension(400, 300));
 
@@ -194,6 +195,13 @@ public class mainpage extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("Delete");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -202,7 +210,8 @@ public class mainpage extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -215,7 +224,10 @@ public class mainpage extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -244,13 +256,39 @@ public class mainpage extends javax.swing.JFrame {
         int qty = (int) pqty.getValue();
         Object pr = ppr.getValue();
         
-        int r = pobj.addProduct(pn, qty, pr);
+        int r = product_obj.addProduct(pn, qty, pr);
         if(r==1){
             JOptionPane.showMessageDialog(addproductframe, "New Product Successfully");
             clearAddProductFields();
             refresh();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        int r = ptable.getSelectedRow();
+        if(r==-1){
+            JOptionPane.showMessageDialog(rootPane, "Please Select a product", "Warning", JOptionPane.WARNING_MESSAGE);
+        }else{
+            Object id = ptable.getValueAt(r, 0);
+            Object product_name = ptable.getValueAt(r, 1);
+            int c = JOptionPane.showConfirmDialog(rootPane, "This will delete "+product_name+"?\nClick OK to continue","Confirm Delete",JOptionPane.OK_CANCEL_OPTION);
+            
+            if(c==JOptionPane.YES_OPTION){
+                int cc = JOptionPane.showConfirmDialog(rootPane, "Are you sure you want to delete "+product_name+"?","Delete",JOptionPane.YES_NO_OPTION);
+                if(cc==JOptionPane.YES_OPTION){
+                    int re = product_obj.deleteProduct(id);
+                    if(re==1){
+                        JOptionPane.showMessageDialog(rootPane, product_name+" Deleted from database");
+                        refresh();
+                    }
+                }
+            }
+            
+            //System.out.println(c);
+        }
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -291,6 +329,7 @@ public class mainpage extends javax.swing.JFrame {
     private javax.swing.JFrame addproductframe;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
