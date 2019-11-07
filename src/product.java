@@ -97,4 +97,27 @@ public class product {
         return r;
     }
 
+    public int addQuantity(Object id, Object quantity){
+        int r = 0;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = (Connection) DriverManager.getConnection(con.url,con.username,con.password);
+        
+            String sql = "UPDATE products SET quantity = quantity + ? WHERE id = ?;";
+            PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
+        
+            int newqty = Integer.parseInt(quantity.toString());
+            pstmt.setInt(1, newqty);
+            String newid = id.toString();
+            pstmt.setString(2, newid);
+            
+            r = pstmt.executeUpdate();
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(product.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return r;
+    }
 }

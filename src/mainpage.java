@@ -28,14 +28,14 @@ public class mainpage extends javax.swing.JFrame {
     public mainpage() {
         initComponents(); 
         this.setLocationRelativeTo(null);
-        refresh();
+        refreshThread.start();
     }
     
     public mainpage(String fname) {
         initComponents();
         jLabel1.setText("Welcome "+fname);
         this.setLocationRelativeTo(null);
-        refresh();
+        refreshThread.start();
     }
 
     product product_obj = new product();
@@ -63,6 +63,7 @@ public class mainpage extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) ptable.getModel();
             model.setRowCount(0);
             while(rs.next()){
+                int qty = Integer.parseInt(rs.getString("quantity"));
                 model.addRow(new Object[]{rs.getString("id"),rs.getString("product_name"),rs.getString("quantity"),rs.getString("price")});
             }
               
@@ -72,6 +73,22 @@ public class mainpage extends javax.swing.JFrame {
             Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    Thread refreshThread = new Thread(new Runnable() {     
+        @Override
+        public void run(){
+            try{
+                while(true){
+                    refresh();
+                    //System.out.println("Refresh");
+                    Thread.sleep(5000);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+    });
     
     final void search(String keyword){
         
@@ -218,10 +235,11 @@ public class mainpage extends javax.swing.JFrame {
                     .addComponent(pntf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(addproductframeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(pqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(xst_qty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(addproductframeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(xst_qty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(addproductframeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(pqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(addproductframeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -543,8 +561,11 @@ public class mainpage extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            
             public void run() {
                 new mainpage().setVisible(true);
             }
