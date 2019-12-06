@@ -275,9 +275,16 @@ public class registration extends javax.swing.JFrame {
         int x = logobj.login(un, pw);
         if(x==1){
             //System.out.println("Login Success");
-            this.setVisible(false);
-            JFrame mainpage = new mainpage(logobj.fname);
-            mainpage.setVisible(true);
+            
+            if(logobj.type == 1){
+                //POS
+            }else if(logobj.type == 2){
+                this.setVisible(false);
+                JFrame mainpage = new mainpage(logobj.fname);
+                mainpage.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Username not verified by the administrator", "Warning", JOptionPane.WARNING_MESSAGE);
+            }         
         }else{
             JOptionPane.showMessageDialog(rootPane, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
         }

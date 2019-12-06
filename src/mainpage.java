@@ -2,6 +2,11 @@
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -29,6 +34,7 @@ public class mainpage extends javax.swing.JFrame {
         initComponents(); 
         this.setLocationRelativeTo(null);
         refreshThread.start();
+        checkLowQty.start();
     }
     
     public mainpage(String fname) {
@@ -36,6 +42,7 @@ public class mainpage extends javax.swing.JFrame {
         jLabel1.setText("Welcome "+fname);
         this.setLocationRelativeTo(null);
         refreshThread.start();
+        checkLowQty.start();
     }
 
     product product_obj = new product();
@@ -63,7 +70,6 @@ public class mainpage extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) ptable.getModel();
             model.setRowCount(0);
             while(rs.next()){
-                int qty = Integer.parseInt(rs.getString("quantity"));
                 model.addRow(new Object[]{rs.getString("id"),rs.getString("product_name"),rs.getString("quantity"),rs.getString("price")});
             }
               
@@ -87,6 +93,64 @@ public class mainpage extends javax.swing.JFrame {
                 Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
             }
             
+        }
+    });
+    
+    final void checkLowQuantity(){
+        Notification n = new Notification();
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = (Connection) DriverManager.getConnection(con.url,con.username,con.password);
+            
+            String sql = "select * from products;";
+            String status_sql = "UPDATE products SET status=? WHERE id=?;";
+            Statement stmt = (Statement) conn.createStatement();
+            
+            PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(status_sql);
+            
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while(rs.next()){
+                String id = rs.getString("id");
+                int qty = Integer.parseInt(rs.getString("quantity"));
+                int status = rs.getInt("status");
+                String product = rs.getString("product_name");
+                
+                if (qty < 5 && status != 1){
+                    pstmt.setInt(1, 1);
+                    pstmt.setString(2, id);
+                    pstmt.executeUpdate();
+                    n.displayNotification(product);
+                }else if(qty > 5 && status == 1){
+                    
+                    pstmt.setInt(1, 2);
+                    pstmt.setString(2, id);
+                    pstmt.executeUpdate();
+                
+                }
+            }
+                
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AWTException ex) {
+            Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    Thread checkLowQty = new Thread(new Runnable(){
+        
+        @Override
+        public void run(){
+            try{
+                while(true){
+                    checkLowQuantity();
+                    Thread.sleep(5000);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(mainpage.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     });
     
@@ -122,7 +186,27 @@ public class mainpage extends javax.swing.JFrame {
         ppr.setEnabled(true);
         clearAddProductFields();
     }
-
+    
+    class Notification{
+    
+        void displayNotification(String product) throws AWTException{
+        
+        SystemTray tray = SystemTray.getSystemTray();
+        
+        Image image = Toolkit.getDefaultToolkit().createImage("img/warning.png");
+        
+        TrayIcon trayIcon = new TrayIcon(image,"Tray Icon"); 
+        
+        trayIcon.setImageAutoSize(true);
+        tray.add(trayIcon);
+        
+        trayIcon.displayMessage("LOW QUANTITY", product+" product low on quantity", TrayIcon.MessageType.WARNING);
+        
+        }
+        
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
